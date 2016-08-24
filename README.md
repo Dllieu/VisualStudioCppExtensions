@@ -40,8 +40,8 @@ Finally, your C++ project will have some filter that replicate your C++ project 
 
 ![Result](images/usage_project_generate_filter_result.png)
 
-## Dependencies
-You have to install Visual Studio 2015 SDK
+## Dependencies for developers
+If you are interested in enhancing this extension, you must install Visual Studio 2015 SDK
 
 ### Debug
 You have to change the debug settings for the VSIXProject to be able to debug it (```Properties -> Debug```)
