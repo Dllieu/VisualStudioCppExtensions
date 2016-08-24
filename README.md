@@ -40,6 +40,6 @@ Finally, your C++ project will have some filter that replicate your C++ project 
 You have to install Visual Studio 2015 SDK
 
 ### Debug
-You have to change the debug settings for the VSIXProject to be able to debug (```Properties -> Debug```)
+You have to change the debug settings for the VSIXProject to be able to debug it (```Properties -> Debug```)
 - Start external program : ```C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe```
 - Command line arguments: ```/rootsuffix EXP```
