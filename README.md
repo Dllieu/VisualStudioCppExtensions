@@ -43,7 +43,7 @@ Once the filters are generated, the extension will automatically reload the curr
   <img src="images/usage_project_generate_filter_save_change.png" alt="Save change made by Generate Filter"/>
 </p>
 
-As a result, your C++ project will have filters that replicate your C++ project folder hierarchy
+As a result, your C++ project will have filters that replicate your C++ sources folder hierarchy
 
 <p align="center">
   <img src="images/usage_project_generate_filter_result.png" alt="Result"/>
