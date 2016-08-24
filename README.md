@@ -5,15 +5,20 @@
 ## About
 Custom plugins for Visual Studio 2015+:
 - **Generate Filter**
- - Simple Extension which provide the ability to generate C++ project filters to replicate the folder hierarchy of existing underlying sources / headers
+ - Simple Extension which provide the ability to generate C++ project filters to replicate the folder hierarchy of the existing underlying sources
  - It also automatically generate the Additional Include Directories
  - It was originally made to browse easily C++ code hosted on a Linux machine
+
+<p align="center">
+  <img src="images/usage_project_no_filter.png" alt="Project without filter"/>
+  <img src="images/usage_project_generate_filter_result.png" alt="Project with filter replicating the folder hierarchy"/>
+</p>
 
 ## Installation
 - Download the ```*.vsix``` package from the **[latest release](https://github.com/Dllieu/VisualStudioCppExtensions/releases/latest)**
 - Double click on the downloaded package and follow the instructions
 
-## Usage
+## Example Usage
 Open an existing C++ solution
 
 ![Project without filters](images/usage_project_no_filter.png)
