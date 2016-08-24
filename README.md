@@ -21,24 +21,33 @@ Custom plugins for Visual Studio 2015+:
 ## Example Usage
 Open an existing C++ solution
 
-![Project without filters](images/usage_project_no_filter.png)
-
+<p align="center">
+  <img src="images/usage_project_no_filter.png" alt="Project without filter"/>
+</p>
 
 Right click on the project for which you want to generate the filters per folder, a menu ```Generate C++ Project Filters``` will appear (*only appearing when right-clicking on a C++ project*)
 
-![Right click on the project](images/usage_project_right_click.png)
+<p align="center">
+  <img src="images/usage_project_right_click.png" alt="Right click on the project"/>
+</p>
 
 Click on ```Generate C++ Project Filters```, a confirmation will be required to generate the filters
 
-![Notification for confirmation](images/usage_project_generate_filter_confirmation.png)
+<p align="center">
+  <img src="images/usage_project_generate_filter_confirmation.png" alt="Notification for confirmation"/>
+</p>
 
 Once the filters are generated, the extension will automatically reload the current project if needed. Accept the changes made by the extension by clicking yes
 
-![Save change made by Generate Filter](images/usage_project_generate_filter_save_change.png)
+<p align="center">
+  <img src="images/usage_project_generate_filter_save_change.png" alt="Save change made by Generate Filter"/>
+</p>
 
-Finally, your C++ project will have some filter that replicate your C++ project folder hierarchy
+As a result, your C++ project will have some filter that replicate your C++ project folder hierarchy
 
-![Result](images/usage_project_generate_filter_result.png)
+<p align="center">
+  <img src="images/usage_project_generate_filter_result.png" alt="Result"/>
+</p>
 
 ## Dependencies for developers
 If you are interested in enhancing this extension, you must install Visual Studio 2015 SDK
