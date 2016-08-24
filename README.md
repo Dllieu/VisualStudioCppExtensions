@@ -1,4 +1,8 @@
 # Visual Studio C++ Plugin
+
+[![Build status](https://ci.appveyor.com/api/projects/status/xq7g1w19ufbx3htt?svg=true)](https://ci.appveyor.com/project/Dllieu/visualstudiocppextensions)
+
+
 Custom plugins for Visual Studio 2015+:
 - **Generate Filter**
  - Simple Extension which provide the ability to generate C++ project filters to replicate the folder hierarchy of existing underlying sources / headers
