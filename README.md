@@ -14,7 +14,6 @@ Custom plugins for Visual Studio 2015+:
 - Double click on the downloaded package and follow the instructions
 
 ## Usage
-### From an existing C++ solution
 Open an existing C++ solution
 
 ![Project without filters](images/usage_project_no_filter.png)
