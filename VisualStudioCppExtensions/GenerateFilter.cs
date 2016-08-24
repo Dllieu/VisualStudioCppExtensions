@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // <copyright file="GenerateFilter.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
@@ -14,7 +14,6 @@ using EnvDTE;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using System.Linq;
 using System.Text;
 
 namespace VisualStudioCppExtensions
@@ -22,9 +21,6 @@ namespace VisualStudioCppExtensions
     internal sealed class GenerateFilter
     {
         #region ATTRIBUTES
-        static string[] HEADER_EXTENSIONS = new string[] { ".h", ".hh", ".hpp", ".hxx" };
-        static string[] SOURCE_EXTENSIONS = new string[] { ".c", ".cc", ".cpp", ".cxx" };
-
         public const int CommandId = 0x0100;
         public static readonly Guid CommandSet = new Guid("acd8036f-19ae-43b2-a2d6-11788cb282fe");
         private readonly Package package;
@@ -145,20 +141,20 @@ namespace VisualStudioCppExtensions
             }
         }
 
-        static private void SetAdditionalIncludeDirectories(Project project, List<string> sourceFiles, string projectPath)
+        static private void SetAdditionalIncludeDirectories(Project project, Dictionary<string, List<string>> filesPerItemType, string projectPath)
         {
+            if (!filesPerItemType.ContainsKey("ClInclude"))
+                return;
+
             var stringBuilder = new StringBuilder();
             var hashSet = new HashSet<string>();
-            foreach (var file in sourceFiles)
+            foreach (var file in filesPerItemType["ClInclude"])
             {
-                if (EndsWithAny(file, HEADER_EXTENSIONS))
+                var directoryName = GetRelativePathIfNeeded(projectPath, Path.GetDirectoryName(file));
+                if (!hashSet.Contains(directoryName))
                 {
-                    var directoryName = GetRelativePathIfNeeded(projectPath, Path.GetDirectoryName(file));
-                    if (!hashSet.Contains(directoryName))
-                    {
-                        stringBuilder.Append(directoryName + ';');
-                        hashSet.Add(directoryName);
-                    }
+                    stringBuilder.Append(directoryName + ';');
+                    hashSet.Add(directoryName);
                 }
             }
             stringBuilder.Append(@"$(StlIncludeDirectories);");
@@ -172,6 +168,7 @@ namespace VisualStudioCppExtensions
                     if (compilerTool != null)
                     {
                         var includeDirectories = stringBuilder.ToString();
+                        // Avoid updating AdditionalIncludeDirectories when applicable to avoid reloading the project
                         if (includeDirectories != compilerTool.AdditionalIncludeDirectories)
                             compilerTool.AdditionalIncludeDirectories = includeDirectories;
                     }
@@ -191,55 +188,62 @@ namespace VisualStudioCppExtensions
         }
         #endregion
         #region PATH UTILS
-        private static string FindCommonPath(List<string> paths)
+        private static string FindCommonPath(Dictionary<string, List<string>> filesPerItemType)
         {
-            if (paths == null || paths.Count == 0 || paths[0] == null)
+            if (filesPerItemType == null || filesPerItemType.Count == 0)
                 return string.Empty;
-            
-            var result = Path.GetDirectoryName(paths[0]);
-            for (var i = 1; i < paths.Count; ++i)
+
+            var result = string.Empty;
+            foreach (var entry in filesPerItemType)
             {
-                if (paths[i] == null)
-                    return string.Empty;
-
-                var currentPath = Path.GetDirectoryName(paths[i]);
-                var indexMaxEqual = 0;
-                while (indexMaxEqual < result.Length
-                    && indexMaxEqual < currentPath.Length
-                    && result[indexMaxEqual] == currentPath[indexMaxEqual])
+                foreach (var path in entry.Value)
                 {
-                    ++indexMaxEqual;
+                    if (path == null)
+                        return string.Empty;
+
+                    if (result == string.Empty)
+                    {
+                        result = Path.GetDirectoryName(path);
+                        continue;
+                    }
+
+                    var currentPath = Path.GetDirectoryName(path);
+                    var indexMaxEqual = 0;
+                    while (indexMaxEqual < result.Length
+                        && indexMaxEqual < currentPath.Length
+                        && result[indexMaxEqual] == currentPath[indexMaxEqual])
+                    {
+                        ++indexMaxEqual;
+                    }
+
+                    if (indexMaxEqual == 0)
+                        return string.Empty;
+
+                    if (indexMaxEqual == result.Length)
+                        continue;
+
+                    if (indexMaxEqual < result.Length)
+                        result = result.Substring(0, indexMaxEqual);
                 }
-
-                if (indexMaxEqual == 0)
-                    return string.Empty;
-
-                if (indexMaxEqual == result.Length)
-                    continue;
-
-                if (indexMaxEqual < result.Length)
-                    result = result.Substring(0, indexMaxEqual);
             }
             return result;
         }
-        private static HashSet<string> GenerateUniquePathByFilter(string commonPath, List<string> sourceFiles)
+
+        private static HashSet<string> GenerateUniquePathByFilter(string commonPath, Dictionary<string, List<string>> filesPerItemType)
         {
-            var sss = "";
-            foreach (string s in Directory.GetDirectories(commonPath))
-                sss += s + '\n';
-
             var result = new HashSet<string>();
-            foreach (var file in sourceFiles)
-            {
-                var path = Path.GetDirectoryName(file);
-                if (path.Length == commonPath.Length)
-                    continue;
+            foreach (var entry in filesPerItemType)
+                foreach (var file in entry.Value)
+                {
+                    var path = Path.GetDirectoryName(file);
+                    if (path.Length == commonPath.Length)
+                        continue;
 
-                path = GetPathExtensionFromCommonPath(commonPath, path);
-                result.Add(path);
-                for (var i = path.LastIndexOf(Path.DirectorySeparatorChar); i != -1; i = path.LastIndexOf(Path.DirectorySeparatorChar, i - 1))
-                    result.Add(path.Substring(0, i));
-            }
+                    path = GetPathExtensionFromCommonPath(commonPath, path);
+                    result.Add(path);
+                    for (var i = path.LastIndexOf(Path.DirectorySeparatorChar); i != -1; i = path.LastIndexOf(Path.DirectorySeparatorChar, i - 1))
+                        result.Add(path.Substring(0, i));
+                }
             return result;
         }
 
@@ -296,7 +300,7 @@ namespace VisualStudioCppExtensions
             xmlWriter.WriteEndElement();
         }
 
-        private static void WriteSources(XmlWriter xmlWriter, string elementName, string[] extensions, List<string> files, string projectPath, string commonPath)
+        private static void WriteSources(XmlWriter xmlWriter, string itemType, List<string> files, string projectPath, string commonPath)
         {
             if (files == null || files.Count == 0)
                 return;
@@ -305,14 +309,11 @@ namespace VisualStudioCppExtensions
             xmlWriter.WriteStartElement("ItemGroup");
             foreach (var file in files)
             {
-                if (!EndsWithAny(file, extensions))
-                    continue;
-
                 var path = Path.GetDirectoryName(file);
                 if (path.Length == commonPath.Length)
                     continue;
 
-                xmlWriter.WriteStartElement(elementName);
+                xmlWriter.WriteStartElement(itemType);
                 xmlWriter.WriteAttributeString("Include", GetRelativePathIfNeeded(projectPath, file));
 
                 {
@@ -326,12 +327,6 @@ namespace VisualStudioCppExtensions
             xmlWriter.WriteEndElement();
         }
         #endregion
-        #region UTILS
-        private static bool EndsWithAny(string file, IEnumerable<string> extensions)
-        {
-            return extensions.Any(extension => file.EndsWith(extension));
-        }
-        #endregion
 
         /// <summary>
         /// This function is the callback used to execute the command when the menu item is clicked.
@@ -341,7 +336,6 @@ namespace VisualStudioCppExtensions
         private void MenuItemCallback(object sender, EventArgs e)
         {
             Project project = GetActiveProject();
-            #region ERROR CHECKING
             if (!IsCppProject(project))
             {
                 ErrorMessageBox("A C++ project must be selected to generate filter!");
@@ -355,18 +349,25 @@ namespace VisualStudioCppExtensions
                                                 OLEMSGBUTTON.OLEMSGBUTTON_OKCANCEL,
                                                 OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST) == DialogResult.Cancel)
                 return;
-            #endregion
 
-            var sourceFiles = new List<string>();
+            // ClCompile -> .cpp, .cc, .c, ...
+            // ClInclude -> .h, .hxx, .hpp, ...
+            // None -> Makefile, .gitignore, ...
+            var filesPerItemType = new Dictionary<string /* ItemType */, List<string> /* Files FullPath */>();
             foreach (ProjectItem projectItem in Recurse(project.ProjectItems))
             {
                 if (projectItem.Kind == EnvDTE.Constants.vsProjectItemKindPhysicalFile)
                 {
                     try
                     {
-                        var currentFile = projectItem.Properties.Item("FullPath").Value as string;
-                        if (currentFile != null && EndsWithAny(currentFile, HEADER_EXTENSIONS.Concat(SOURCE_EXTENSIONS)))
-                            sourceFiles.Add(currentFile);
+                        var itemType = projectItem.Properties.Item("ItemType").Value as string;
+                        if (string.IsNullOrEmpty(itemType))
+                            continue;
+
+                        if (!filesPerItemType.ContainsKey(itemType))
+                            filesPerItemType.Add(itemType, new List<string>());
+
+                        filesPerItemType[itemType].Add(projectItem.Properties.Item("FullPath").Value as string);
                     }
                     catch (Exception)
                     {
@@ -375,7 +376,7 @@ namespace VisualStudioCppExtensions
                 }
             }
 
-            var commonPath = FindCommonPath(sourceFiles);
+            var commonPath = FindCommonPath(filesPerItemType);
             if (string.IsNullOrEmpty(commonPath))
             {
                 ErrorMessageBox("No common sub-path between files, cannot generate filter!");
@@ -385,7 +386,7 @@ namespace VisualStudioCppExtensions
             // Keep for Post-Unloading
             var projectFilename = project.FileName;
             var projectPath = Path.GetDirectoryName(projectFilename);
-            SetAdditionalIncludeDirectories(project, sourceFiles, projectPath);
+            SetAdditionalIncludeDirectories(project, filesPerItemType, projectPath);
              // Check if user is prompted? (what if he made his own change and want to discard them? i.e. can use project.Saved first)
             project.DTE.ExecuteCommand("Project.UnloadProject");
 
@@ -396,9 +397,9 @@ namespace VisualStudioCppExtensions
                 xmlWriter.WriteAttributeString("ToolsVersion", "4.0");
                 xmlWriter.WriteAttributeString("Project", "xmlns", null, @"http://schemas.microsoft.com/developer/msbuild/2003");
 
-                WriteFilter(xmlWriter, GenerateUniquePathByFilter(commonPath, sourceFiles));
-                WriteSources(xmlWriter, "ClInclude", HEADER_EXTENSIONS, sourceFiles, projectPath, commonPath);
-                WriteSources(xmlWriter, "ClCompile", SOURCE_EXTENSIONS, sourceFiles, projectPath, commonPath);
+                WriteFilter(xmlWriter, GenerateUniquePathByFilter(commonPath, filesPerItemType));
+                foreach (var entry in filesPerItemType)
+                    WriteSources(xmlWriter, entry.Key, entry.Value, projectPath, commonPath);
 
                 xmlWriter.WriteEndElement();
             }
