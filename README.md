@@ -5,7 +5,7 @@
 ## About
 Custom plugins for Visual Studio 2015+:
 - **Generate Filter**
- - Simple Extension which provide the ability to generate C++ project filters to replicate the folder hierarchy of the existing underlying sources
+ - Simple Extension which provide the ability to generate C++ project filters to replicate the folder hierarchy of the underlying sources
  - It also automatically generate the Additional Include Directories
  - It was originally made to browse easily C++ code hosted on a Linux machine while benefiting of the Visual Studio's features (e.g. GUI, Go to Definition / Declaration, ...)
 
