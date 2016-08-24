@@ -12,14 +12,10 @@
         <!--To add in Add submenu-->
         <!--<Parent guid="guidSHLMainMenu" id="cmdidShellWindowNavigate7" />-->
       </Group>
-
-      <Group guid="guidGenerateFilterPackageCmdSet" id="grpIdSolutionContextAdd">
-        <Parent guid="guidSHLMainMenu" id="cmdidShellWindowNavigate5" />
-      </Group>
     </Groups>
 
     <Buttons>
-      <Button guid="guidGenerateFilterPackageCmdSet" id="GenerateFilterCommand" type="Button">
+      <Button guid="guidGenerateFilterPackageCmdSet" id="GenerateFilterCommand" type="Button" priority="0x0100">
         <Parent guid="guidGenerateFilterPackageCmdSet" id="grpIdProjectContextAdd" />
         <Icon guid="GenerateFilterIcon" id="GenerateFilterIconID" />
         
