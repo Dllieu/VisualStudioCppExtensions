@@ -19,6 +19,6 @@ build:
   verbosity: normal
 
 before_build:
-  - nuget restore $(APPVEYOR_BUILD_FOLDER)\VisualStudioCppExtensions.sln -Verbosity quiet
+  - nuget restore VisualStudioCppExtensions.sln -Verbosity quiet
 
 test: off
