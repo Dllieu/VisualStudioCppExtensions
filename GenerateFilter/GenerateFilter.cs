@@ -58,7 +58,6 @@ namespace VisualStudioCppExtensions
             if (commandService != null)
             {
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                //var menuItem = new MenuCommand(this.MenuItemCallback, menuCommandID);
                 var menuItem = new OleMenuCommand(this.MenuItemCallback, menuCommandID);
                 menuItem.BeforeQueryStatus += OnBeforeQueryStatus;
 
@@ -145,19 +144,12 @@ namespace VisualStudioCppExtensions
         {
             if (!filesPerItemType.ContainsKey("ClInclude"))
                 return;
-
-            var stringBuilder = new StringBuilder();
-            var hashSet = new HashSet<string>();
+            
+            var includePaths = new HashSet<string> { @"$(StlIncludeDirectories)" };
             foreach (var file in filesPerItemType["ClInclude"])
             {
-                var directoryName = GetRelativePathIfNeeded(projectPath, Path.GetDirectoryName(file));
-                if (!hashSet.Contains(directoryName))
-                {
-                    stringBuilder.Append(directoryName + ';');
-                    hashSet.Add(directoryName);
-                }
+                includePaths.Add(GetRelativePathIfNeeded(projectPath, Path.GetDirectoryName(file)));
             }
-            stringBuilder.Append(@"$(StlIncludeDirectories);");
 
             var vcProject = project.Object as VCProject;
             foreach (VCConfiguration vcConfiguration in vcProject.Configurations)
@@ -167,10 +159,19 @@ namespace VisualStudioCppExtensions
                     var compilerTool = genericTool as VCCLCompilerTool;
                     if (compilerTool != null)
                     {
-                        var includeDirectories = stringBuilder.ToString();
-                        // Avoid updating AdditionalIncludeDirectories when applicable to avoid reloading the project
-                        if (includeDirectories != compilerTool.AdditionalIncludeDirectories)
-                            compilerTool.AdditionalIncludeDirectories = includeDirectories;
+                        if (compilerTool.AdditionalIncludeDirectories == null)
+                            compilerTool.AdditionalIncludeDirectories = string.Empty;
+
+                        var sss = compilerTool.AdditionalIncludeDirectories;
+                        var currentAdditionalIncludeDirectories = new HashSet<string>(compilerTool.AdditionalIncludeDirectories.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
+                        var pathsToAdd = new StringBuilder();
+                        foreach (var includePath in includePaths)
+                            // Avoid updating AdditionalIncludeDirectories when applicable to avoid reloading the project
+                            if (!currentAdditionalIncludeDirectories.Contains(includePath))
+                                pathsToAdd.Append(includePath + ';');
+
+                        if (pathsToAdd.Length > 0)
+                            compilerTool.AdditionalIncludeDirectories = pathsToAdd.ToString() + compilerTool.AdditionalIncludeDirectories;
                     }
                 }
             }
@@ -387,7 +388,6 @@ namespace VisualStudioCppExtensions
             var projectFilename = project.FileName;
             var projectPath = Path.GetDirectoryName(projectFilename);
             SetAdditionalIncludeDirectories(project, filesPerItemType, projectPath);
-             // Check if user is prompted? (what if he made his own change and want to discard them? i.e. can use project.Saved first)
             project.DTE.ExecuteCommand("Project.UnloadProject");
 
             var xmlSettings = new XmlWriterSettings() { Indent = true };
