@@ -15,7 +15,7 @@ Custom plugins for Visual Studio 2015+:
 </p>
 
 ## Installation
-- Download the ```*.vsix``` package from the **[latest release](https://github.com/Dllieu/VisualStudioCppExtensions/releases/latest)**
+- Download the ```*.vsix``` package from the **[latest release](https://github.com/Dllieu/VisualStudioCppExtensions/releases/latest)** or from **[Visual Studio gallery](https://visualstudiogallery.msdn.microsoft.com/5a3251d7-3228-4813-a67e-6b9cc83d0507)**
 - Double click on the downloaded package and follow the instructions
 
 ## Example Usage
