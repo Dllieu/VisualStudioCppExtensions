@@ -21,6 +21,8 @@ Custom plugins for Visual Studio 2015+:
 ## Example Usage
 Open an existing C++ solution
 
+In the example below, I drag and dropped a folder into an empty C++ Project, all the files are imported but the whole project is *flat* as visual studio does not replicate the folder hierarchy of the files for C++ projects
+
 <p align="center">
   <img src="images/usage_project_no_filter.png" alt="Project without filter"/>
 </p>
