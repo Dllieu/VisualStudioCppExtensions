@@ -9,11 +9,11 @@ using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Internal.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.VCProjectEngine;
 using EnvDTE;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using System.Reflection;
 using System.Text;
 
 namespace VisualStudioCppExtensions
@@ -140,29 +140,48 @@ namespace VisualStudioCppExtensions
             }
         }
 
+        static private string GetAssemblyLocalPathFrom(Type type)
+        {
+            string codebase = type.Assembly.CodeBase;
+            var uri = new Uri(codebase, UriKind.Absolute);
+            return uri.LocalPath;
+        }
+
         static private void SetAdditionalIncludeDirectories(Project project, Dictionary<string, List<string>> filesPerItemType, string projectPath)
         {
             if (!filesPerItemType.ContainsKey("ClInclude"))
                 return;
-            
+
             var includePaths = new HashSet<string> { @"$(StlIncludeDirectories)" };
             foreach (var file in filesPerItemType["ClInclude"])
             {
                 includePaths.Add(GetRelativePathIfNeeded(projectPath, Path.GetDirectoryName(file)));
             }
 
-            var vcProject = project.Object as VCProject;
-            foreach (VCConfiguration vcConfiguration in vcProject.Configurations)
+            string filterAssemblyInstallionPath = Path.GetDirectoryName(GetAssemblyLocalPathFrom(typeof(GenerateFilterPackage)));
+
+            DTE dte = (DTE)Package.GetGlobalService(typeof(DTE));
+            if (dte.Version.StartsWith("14"))
             {
-                foreach (var genericTool in vcConfiguration.Tools)
+                Assembly.LoadFrom(Path.Combine(filterAssemblyInstallionPath, @"Resources\\VCProjectEngine_14.0.dll"));
+            }
+            else
+            {
+                Assembly.LoadFrom(Path.Combine(filterAssemblyInstallionPath, @"Resources\\VCProjectEngine_15.0.dll"));
+            }
+
+            dynamic vcProject = project.Object;
+            foreach (dynamic vcConfiguration in vcProject.Configurations)
+            {
+                foreach (dynamic genericTool in vcConfiguration.Tools)
                 {
-                    var compilerTool = genericTool as VCCLCompilerTool;
-                    if (compilerTool != null)
+                    dynamic compilerTool = genericTool;
+                    if (compilerTool != null && compilerTool.GetType().FullName == "Microsoft.VisualStudio.Project.VisualC.VCProjectEngine.VCCLCompilerToolShim")
                     {
+                        // runtime
                         if (compilerTool.AdditionalIncludeDirectories == null)
                             compilerTool.AdditionalIncludeDirectories = string.Empty;
-
-                        var sss = compilerTool.AdditionalIncludeDirectories;
+                        
                         var currentAdditionalIncludeDirectories = new HashSet<string>(compilerTool.AdditionalIncludeDirectories.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
                         var pathsToAdd = new StringBuilder();
                         foreach (var includePath in includePaths)
