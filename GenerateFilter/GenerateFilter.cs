@@ -406,7 +406,6 @@ namespace VisualStudioCppExtensions
             // Keep for Post-Unloading
             var projectFilename = project.FileName;
             var projectPath = Path.GetDirectoryName(projectFilename);
-            SetAdditionalIncludeDirectories(project, filesPerItemType, projectPath);
             project.DTE.ExecuteCommand("Project.UnloadProject");
 
             var xmlSettings = new XmlWriterSettings() { Indent = true };
