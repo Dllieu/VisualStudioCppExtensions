@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="GenerateFilterPackage.cs" company="Company">
+// <copyright file="GenerateCppFiltersPackage.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 
-namespace VisualStudioCppExtensions
+namespace GenerateCppFiltersExtension
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -38,20 +38,20 @@ namespace VisualStudioCppExtensions
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [Guid(GenerateFilterPackage.PackageGuidString)]
+    [Guid(GenerateCppFiltersPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideAutoLoad(UIContextGuids.SolutionExists)]
-    public sealed class GenerateFilterPackage : Package
+    public sealed class GenerateCppFiltersPackage : Package
     {
         /// <summary>
-        /// GenerateFilterPackage GUID string.
+        /// GenerateCppFiltersPackage GUID string.
         /// </summary>
         public const string PackageGuidString = "99d03761-6200-41ad-b2a1-638ae9e780e5";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenerateFilter"/> class.
+        /// Initializes a new instance of the <see cref="GenerateCppFilters"/> class.
         /// </summary>
-        public GenerateFilterPackage()
+        public GenerateCppFiltersPackage()
         {
             // Inside this method you can place any initialization code that does not require
             // any Visual Studio service because at this point the package object is created but
@@ -67,7 +67,7 @@ namespace VisualStudioCppExtensions
         /// </summary>
         protected override void Initialize()
         {
-            GenerateFilter.Initialize(this);
+            GenerateCppFilters.Initialize(this);
             base.Initialize();
         }
 

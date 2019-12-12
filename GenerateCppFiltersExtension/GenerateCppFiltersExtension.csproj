@@ -20,7 +20,7 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Resources\GenerateFilter.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\GenerateCppFilters.ico</ApplicationIcon>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -31,8 +31,8 @@
     <ProjectGuid>{18555A86-3A5F-4D33-8C12-01E288BDC30E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VisualStudioCppExtensions</RootNamespace>
-    <AssemblyName>VisualStudioCppExtensions</AssemblyName>
+    <RootNamespace>GenerateCppFiltersExtension</RootNamespace>
+    <AssemblyName>GenerateCppFiltersExtension</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
@@ -59,8 +59,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="GenerateFilter.cs" />
-    <Compile Include="GenerateFilterPackage.cs" />
+    <Compile Include="GenerateCppFilters.cs" />
+    <Compile Include="GenerateCppFiltersPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -76,15 +76,15 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="GenerateFilterPackage.vsct">
+    <VSCTCompile Include="GenerateCppFiltersPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
     <Content Include="index.html" />
-    <Content Include="Resources\GenerateFilterPackage.ico">
+    <Content Include="Resources\GenerateCppFiltersPackage.ico">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Resources\GenerateFilter.ico">
+    <Content Include="Resources\GenerateCppFilters.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

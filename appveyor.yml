@@ -11,14 +11,14 @@ init:
   - set PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
   - cmd: msbuild /version
 
-clone_folder: C:\projects\VisualStudioCppExtensions
+clone_folder: C:\projects\GenerateCppFiltersExtension
 
 build:
-  project: $(APPVEYOR_BUILD_FOLDER)\VisualStudioCppExtensions.sln
+  project: $(APPVEYOR_BUILD_FOLDER)\GenerateCppFiltersExtension.sln
   parallel: true
   verbosity: normal
 
 before_build:
-  - nuget restore VisualStudioCppExtensions.sln -Verbosity quiet
+  - nuget restore GenerateCppFiltersExtension.sln -Verbosity quiet
 
 test: off
