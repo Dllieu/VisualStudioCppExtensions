@@ -1,24 +1,17 @@
-version: "1.50.{build}"
+version: 1.50.{build}
 
-#vc150
-os: Visual Studio 2017
-
-configuration:
-  - Debug
-  - Release
-
-init:
-  - set PATH=C:\Program Files (x86)\MSBuild\15.0\Bin;%PATH%
-  - cmd: msbuild /version
-
-clone_folder: C:\projects\VisualStudioCppExtensions
-
-build:
-  project: $(APPVEYOR_BUILD_FOLDER)\VisualStudioCppExtensions.sln
-  parallel: true
-  verbosity: normal
+image: Visual Studio 2019
 
 before_build:
-  - nuget restore VisualStudioCppExtensions.sln -Verbosity quiet
+- cmd: nuget restore
 
-test: off
+configuration:
+  - Release
+
+build:
+  verbosity: minimal
+
+artifacts:
+- path: '**\*.vsix'
+
+

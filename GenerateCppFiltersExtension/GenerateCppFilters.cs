@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------------
-// <copyright file="GenerateFilter.cs" company="Company">
+// <copyright file="GenerateCppFilters.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -16,9 +16,9 @@ using System.Xml;
 using System.Reflection;
 using System.Text;
 
-namespace VisualStudioCppExtensions
+namespace GenerateCppFiltersExtension
 {
-    internal sealed class GenerateFilter
+    internal sealed class GenerateCppFilters
     {
         #region ATTRIBUTES
         public const int CommandId = 0x0100;
@@ -41,11 +41,11 @@ namespace VisualStudioCppExtensions
         }
         #endregion
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenerateFilter"/> class.
+        /// Initializes a new instance of the <see cref="GenerateCppFilters"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        private GenerateFilter(Package package)
+        private GenerateCppFilters(Package package)
         {
             if (package == null)
             {
@@ -68,7 +68,7 @@ namespace VisualStudioCppExtensions
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static GenerateFilter Instance
+        public static GenerateCppFilters Instance
         {
             get;
             private set;
@@ -91,7 +91,7 @@ namespace VisualStudioCppExtensions
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(Package package)
         {
-            Instance = new GenerateFilter(package);
+            Instance = new GenerateCppFilters(package);
         }
 
         #region PROJECT UTILS
@@ -158,7 +158,7 @@ namespace VisualStudioCppExtensions
                 includePaths.Add(GetRelativePathIfNeeded(projectPath, Path.GetDirectoryName(file)));
             }
 
-            string filterAssemblyInstallionPath = Path.GetDirectoryName(GetAssemblyLocalPathFrom(typeof(GenerateFilterPackage)));
+            string filterAssemblyInstallionPath = Path.GetDirectoryName(GetAssemblyLocalPathFrom(typeof(GenerateCppFiltersPackage)));
 
             DTE dte = (DTE)Package.GetGlobalService(typeof(DTE));
             if (dte.Version.StartsWith("14"))

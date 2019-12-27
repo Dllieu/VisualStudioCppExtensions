@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="VisualStudioCppExtensions.Company.5fdbeaec-89c7-4773-997c-f46757c67a2d" Version="1.3" Language="en-US" Publisher="Stephane Molina" />
+    <Identity Id="GenerateCppFiltersExtension.Company.5fdbeaec-89c7-4773-997c-f46757c67a2d" Version="1.3" Language="en-US" Publisher="Stephane Molina" />
     <DisplayName>Generate C++ Filters</DisplayName>
     <Description xml:space="preserve">Simple Extension which provide the ability to generate C++ project filters to replicate the folder hierarchy of underlying sources</Description>
     <License>Resources\LICENSE</License>
-    <Icon>Resources\GenerateFilter.ico</Icon>
+    <Icon>Resources\GenerateCppFilters.ico</Icon>
     <PreviewImage>Resources\PreviewImage.png</PreviewImage>
     <Tags>c++;folder;import;filter</Tags>
   </Metadata>
   <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,15.0]" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0,)" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />

@@ -3,9 +3,9 @@
   <Extern href="stdidcmd.h"/>
   <Extern href="vsshlids.h"/>
 
-  <Commands package="guidGenerateFilterPackage">
+  <Commands package="guidGenerateCppFiltersPackage">
     <Groups>
-      <Group guid="guidGenerateFilterPackageCmdSet" id="grpIdProjectContextAdd" priority="0x0102">
+      <Group guid="guidGenerateCppFiltersPackageCmdSet" id="grpIdProjectContextAdd" priority="0x0102">
         <!-- Can check what the other existing id/priority (for positioning) are by looking at SharedCmdPlace.vsct, need to modify the group priority while targetting the right id -->
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_PROJNODE" />
 
@@ -15,9 +15,9 @@
     </Groups>
 
     <Buttons>
-      <Button guid="guidGenerateFilterPackageCmdSet" id="GenerateFilterCommand" type="Button" priority="0x0100">
-        <Parent guid="guidGenerateFilterPackageCmdSet" id="grpIdProjectContextAdd" />
-        <Icon guid="GenerateFilterIcon" id="GenerateFilterIconID" />
+      <Button guid="guidGenerateCppFiltersPackageCmdSet" id="GenerateCppFiltersCommand" type="Button" priority="0x0100">
+        <Parent guid="guidGenerateCppFiltersPackageCmdSet" id="grpIdProjectContextAdd" />
+        <Icon guid="GenerateCppFiltersIcon" id="GenerateCppFiltersIconID" />
         
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
@@ -29,21 +29,21 @@
     </Buttons>
 
     <Bitmaps>
-      <Bitmap guid="GenerateFilterIcon" href="Resources\GenerateFilter.ico" usedList="GenerateFilterIconID"/>
+      <Bitmap guid="GenerateCppFiltersIcon" href="Resources\GenerateCppFilters.ico" usedList="GenerateCppFiltersIconID"/>
     </Bitmaps>
   </Commands>
 
   <Symbols>
-    <GuidSymbol name="guidGenerateFilterPackage" value="{99d03761-6200-41ad-b2a1-638ae9e780e5}" />
+    <GuidSymbol name="guidGenerateCppFiltersPackage" value="{99d03761-6200-41ad-b2a1-638ae9e780e5}" />
 
-    <GuidSymbol name="guidGenerateFilterPackageCmdSet" value="{acd8036f-19ae-43b2-a2d6-11788cb282fe}">
-      <IDSymbol name="GenerateFilterCommand" value="0x0100" />
+    <GuidSymbol name="guidGenerateCppFiltersPackageCmdSet" value="{acd8036f-19ae-43b2-a2d6-11788cb282fe}">
+      <IDSymbol name="GenerateCppFiltersCommand" value="0x0100" />
       <IDSymbol name="grpIdProjectContextAdd" value="0x1080" />
       <IDSymbol name="grpIdSolutionContextAdd" value="0x1081" />
     </GuidSymbol>
 
-    <GuidSymbol name="GenerateFilterIcon" value="{363F9640-FBB7-4403-AB20-9A53EA067ECA}">
-      <IDSymbol name="GenerateFilterIconID" value="1" />
+    <GuidSymbol name="GenerateCppFiltersIcon" value="{363F9640-FBB7-4403-AB20-9A53EA067ECA}">
+      <IDSymbol name="GenerateCppFiltersIconID" value="1" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>
